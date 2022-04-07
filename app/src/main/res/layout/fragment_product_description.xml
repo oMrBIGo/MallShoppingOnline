@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.ProductDescriptionFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/tv_product_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/proregular"
+        android:textSize="16sp"
+        android:text="iPhone 13 Pro Max การอัปเกรดระบบกล้องระดับโปรครั้งใหญ่ที่สุดเท่าที่เคยมีมา จอภาพ Super Retina XDR พร้อม ProMotion จึงทั้งเร็วขึ้นและรู้สึกได้ถึงการตอบสนองที่ฉับไวยิ่งขึ้น พร้อมชิป A15 Bionic ที่เร็วสุดขั้ว 5G ที่เร็วสุดแรง1 แถมยังมีดีไซน์ที่ทนทานและแบตเตอรี่ที่ใช้งานได้ดีที่สุดเท่าที่เคยมีมาใน iPhone อีกด้วย" />
+
+</FrameLayout>

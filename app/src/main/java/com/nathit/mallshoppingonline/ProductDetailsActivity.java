@@ -1,0 +1,441 @@
+package com.nathit.mallshoppingonline;
+
+import static com.nathit.mallshoppingonline.MainActivity.showCart;
+import static com.nathit.mallshoppingonline.RegisterActivity.setSignUpFragment;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import android.app.Dialog;
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.nathit.mallshoppingonline.adapter.MyRewardsAdapter;
+import com.nathit.mallshoppingonline.adapter.ProductDetailsAdapter;
+import com.nathit.mallshoppingonline.adapter.ProductImagesAdapter;
+import com.nathit.mallshoppingonline.fragment.SignInFragment;
+import com.nathit.mallshoppingonline.fragment.SignUpFragment;
+import com.nathit.mallshoppingonline.model.ProductSpecificationModel;
+import com.nathit.mallshoppingonline.model.RewardModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductDetailsActivity extends AppCompatActivity {
+
+    private ViewPager productImageViewPager;
+    private TextView productTitle;
+    private TextView averageRatingMiniView;
+    private TextView totalRatingMiniView;
+    private TextView productPrice;
+    private TextView cuttedPrice;
+    private Button codIndicator;
+    private TextView tvCodIndicator;
+    private TabLayout viewpagerIndicator;
+
+    private LinearLayout couponRedemptionLayout;
+    private Button couponRedeemBtn;
+    private TextView rewardTitle;
+    private TextView rewardBody;
+
+    //////// Product description
+    private LinearLayout productDetailsOnlyContainer;
+    private LinearLayout productDetailsTabsContainer;
+    private ViewPager productDetailsViewpager;
+    private TabLayout productDetailsTabLayout;
+    private TextView productOnlyDescriptionBody;
+
+    private List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
+    private String productDescription;
+    private String productOtherDetails;
+    //////// Product description
+
+    //////// rating layout
+    private LinearLayout rateNowLayout;
+    private TextView totalRatings;
+    private LinearLayout ratingsNoContainer;
+    private LinearLayout ratingsProgressBarContainer;
+    private TextView averageRatings;
+    //////// rating layout
+
+    private Button buyNowBtn;
+    private LinearLayout addToCartBtn;
+
+    private static boolean ALREADY_ADDED_TO_WISHLIST = false;
+    private FloatingActionButton addToWishlistBtn;
+
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseUser currentUser;
+
+    //////// couponDialog
+    public static TextView couponTitle;
+    public static TextView couponExpiryDate;
+    public static TextView couponBody;
+    private static RecyclerView couponsRecyclerView;
+    private static LinearLayout selectedCoupon;
+    //////// couponDialog
+
+    private Dialog signInDialog;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_product_details);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        productImageViewPager = findViewById(R.id.product_images_viewpager);
+        viewpagerIndicator = findViewById(R.id.viewpager_indicator);
+        addToWishlistBtn = findViewById(R.id.add_to_wishlist_btn);
+        productDetailsViewpager = findViewById(R.id.product_details_viewpager);
+        productDetailsTabLayout = findViewById(R.id.product_details_tabLayout);
+        buyNowBtn = findViewById(R.id.buy_now_btn);
+        couponRedeemBtn = findViewById(R.id.coupon_redemption_btn);
+        productTitle = findViewById(R.id.product_title);
+        averageRatingMiniView = findViewById(R.id.tv_product_rating_miniView);
+        totalRatingMiniView = findViewById(R.id.total_ratings_miniView);
+        productPrice = findViewById(R.id.product_price);
+        cuttedPrice = findViewById(R.id.cutted_price);
+        tvCodIndicator = findViewById(R.id.tv_cod_indicator);
+        codIndicator = findViewById(R.id.cod_indicator_btn);
+        rewardTitle = findViewById(R.id.reward_title);
+        rewardBody = findViewById(R.id.reward_body);
+        productDetailsTabsContainer = findViewById(R.id.products_details_tabs_container);
+        productDetailsOnlyContainer = findViewById(R.id.products_details_container);
+        productOnlyDescriptionBody = findViewById(R.id.product_details_body);
+        totalRatings = findViewById(R.id.total_ratings);
+        ratingsNoContainer = findViewById(R.id.ratings_number_container);
+        ratingsProgressBarContainer = findViewById(R.id.ratings_progressbar_container);
+        averageRatings = findViewById(R.id.average_rating);
+        addToCartBtn = findViewById(R.id.add_to_cart_btn);
+        couponRedemptionLayout = findViewById(R.id.coupon_redemption_layout);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        List<String> productImages = new ArrayList<>();
+
+        firebaseFirestore.collection("PRODUCTS").document("GSZxbgQsS71SXY3jrvGr")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    for (long x = 1; x < (long) documentSnapshot.get("") + 1; x++) {
+                        productImages.add(documentSnapshot.get("product_image_" + x).toString());
+                    }
+                    ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
+                    productImageViewPager.setAdapter(productImagesAdapter);
+
+                    productTitle.setText(documentSnapshot.get("product_title").toString());
+                    averageRatingMiniView.setText(documentSnapshot.get("average_rating").toString());
+                    totalRatingMiniView.setText("(" + (long) documentSnapshot.get("total_ratings") + ") คะแนน");
+                    productPrice.setText(documentSnapshot.get("product_price").toString() + " บาท");
+                    cuttedPrice.setText(documentSnapshot.get("cutted_price").toString() + " บาท");
+                    if ((boolean) documentSnapshot.get("COD")) {
+                        codIndicator.setVisibility(View.VISIBLE);
+                        tvCodIndicator.setVisibility(View.VISIBLE);
+                    } else {
+                        codIndicator.setVisibility(View.INVISIBLE);
+                        tvCodIndicator.setVisibility(View.INVISIBLE);
+                    }
+                    rewardTitle.setText((long) documentSnapshot.get("free_coupons") + documentSnapshot.get("free_coupon_title").toString());
+                    rewardBody.setText(documentSnapshot.get("free_coupon_body").toString());
+
+                    if ((boolean) documentSnapshot.get("use_tab_layout")) {
+                        productDetailsTabsContainer.setVisibility(View.VISIBLE);
+                        productDetailsOnlyContainer.setVisibility(View.GONE);
+                        productDescription = documentSnapshot.get("product_description").toString();
+
+                        productOtherDetails = documentSnapshot.get("product_other_details").toString();
+
+                        for (long x = 1; x < (long) documentSnapshot.get("total_spec_titles") + 1; x++) {
+                            productSpecificationModelList.add(new ProductSpecificationModel(0,
+                                    documentSnapshot.get("spec_title_" + x).toString()));
+                            for (long y = 1; y < (long) documentSnapshot.get("spec_title_" + x + "_total_fields") + 1; y++) {
+                                productSpecificationModelList.add(new ProductSpecificationModel(1,
+                                        documentSnapshot.get("spec_title_" + x + "_field_" + y + "_name").toString(),
+                                        documentSnapshot.get("spec_title_" + x + "_field_" + y + "_value").toString()));
+                            }
+
+                        }
+                    } else {
+                        productDetailsTabsContainer.setVisibility(View.GONE);
+                        productDetailsOnlyContainer.setVisibility(View.VISIBLE);
+                        productOnlyDescriptionBody.setText(documentSnapshot.get("product_description").toString());
+                    }
+
+                    totalRatings.setText((long) documentSnapshot.get("total_ratings") + " คะแนน");
+
+
+                    for (int x = 0; x < 5; x++) {
+                        TextView rating = (TextView) ratingsNoContainer.getChildAt(x);
+                        rating.setText(String.valueOf((long) documentSnapshot.get((5 - x) + "_star")));
+
+                        ProgressBar progressBar = (ProgressBar) ratingsProgressBarContainer.getChildAt(x);
+                        int maxProgress = Integer.parseInt(String.valueOf((long) documentSnapshot.get("total_ratings")));
+                        progressBar.setMax(maxProgress);
+                        progressBar.setProgress(Integer.parseInt(String.valueOf((long) documentSnapshot.get((5 - x) + "_star"))));
+
+                    }
+                    averageRatings.setText(documentSnapshot.get("average_rating").toString());
+                    productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(), productDetailsTabLayout.getTabCount(), productDescription, productOtherDetails, productSpecificationModelList));
+
+                } else {
+                    Toast.makeText(ProductDetailsActivity.this, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        viewpagerIndicator.setupWithViewPager(productImageViewPager, true);
+
+        addToWishlistBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentUser == null) {
+                    signInDialog.show();
+                } else {
+                    if (ALREADY_ADDED_TO_WISHLIST) {
+                        ALREADY_ADDED_TO_WISHLIST = false;
+                        addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
+                    } else {
+                        ALREADY_ADDED_TO_WISHLIST = true;
+                        addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
+                    }
+                }
+            }
+        });
+
+        productDetailsViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(productDetailsTabLayout));
+        productDetailsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                productDetailsViewpager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        //////// rating layout
+        rateNowLayout = findViewById(R.id.rate_now_linear);
+        for (int x = 0; x < rateNowLayout.getChildCount(); x++) {
+            final int startPosition = x;
+            rateNowLayout.getChildAt(x).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (currentUser == null) {
+                        signInDialog.show();
+                    } else {
+                        setRating(startPosition);
+                    }
+                }
+            });
+        }
+        //////// rating layout
+
+        buyNowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentUser == null) {
+                    signInDialog.show();
+                } else {
+                    Intent deliveryIntent = new Intent(ProductDetailsActivity.this, DeliveryActivity.class);
+                    startActivity(deliveryIntent);
+                }
+            }
+        });
+
+        addToCartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentUser == null) {
+                    signInDialog.show();
+                } else {
+                    //////todo:add to cart
+
+                }
+            }
+        });
+
+        ////// coupon dialog
+        final Dialog checkCouponPriceDialog = new Dialog(ProductDetailsActivity.this);
+        checkCouponPriceDialog.setContentView(R.layout.coupen_redeem_dialog);
+        checkCouponPriceDialog.setCancelable(true);
+        checkCouponPriceDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        checkCouponPriceDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        ImageView toggleRecyclerView = checkCouponPriceDialog.findViewById(R.id.toggle_recyclerview);
+        couponsRecyclerView = checkCouponPriceDialog.findViewById(R.id.coupon_recyclerView);
+        selectedCoupon = checkCouponPriceDialog.findViewById(R.id.selected_coupon);
+        couponTitle = checkCouponPriceDialog.findViewById(R.id.coupen_title);
+        couponExpiryDate = checkCouponPriceDialog.findViewById(R.id.coupen_validity);
+        couponBody = checkCouponPriceDialog.findViewById(R.id.coupen_body);
+        TextView originalPrice = checkCouponPriceDialog.findViewById(R.id.original_price);
+        TextView discountedPrice = checkCouponPriceDialog.findViewById(R.id.discounted_price);
+
+        couponsRecyclerView.setVisibility(View.GONE);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ProductDetailsActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        couponsRecyclerView.setLayoutManager(linearLayoutManager);
+
+        List<RewardModel> rewardModelList = new ArrayList<>();
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 35% เฉพาะลูกค้าใหม่", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 35% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 15%", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 15% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 45%", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 45% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 65%", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 65% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 90% เฉพาะลูกค้าใหม่", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 90% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 80% เฉพาะลูกค้าใหม่", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 80% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 25%", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 25% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 10% เฉพาะลูกค้าใหม่", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 10% ขั้นต่ำ 5,000 บาท สูงสุด"));
+        rewardModelList.add(new RewardModel("โค๊ดส่วนลด 95%", "31 มีนาคม 2565", "มาไวได้ไว รีบใช้ก่อนจะหมด! รับโค๊ดส่วนลด 95% ขั้นต่ำ 5,000 บาท สูงสุด"));
+
+        MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(rewardModelList, true);
+        couponsRecyclerView.setAdapter(myRewardsAdapter);
+        myRewardsAdapter.notifyDataSetChanged();
+
+        toggleRecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogRecyclerView();
+            }
+        });
+
+        couponRedeemBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkCouponPriceDialog.show();
+            }
+        });
+
+        ////// sign dialog
+        signInDialog = new Dialog(ProductDetailsActivity.this);
+        signInDialog.setContentView(R.layout.sign_in_dialog);
+        signInDialog.setCancelable(true);
+        signInDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        Button dialogSignInBtn = signInDialog.findViewById(R.id.sign_in_btn);
+        Button dialogSignUpBtn = signInDialog.findViewById(R.id.sign_up_btn);
+        Intent registerIntent = new Intent(ProductDetailsActivity.this, RegisterActivity.class);
+
+        dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignInFragment.disableCloseBtn = true;
+                SignUpFragment.disableCloseBtn = true;
+                setSignUpFragment = true;
+                startActivity(registerIntent);
+            }
+        });
+        dialogSignUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignInFragment.disableCloseBtn = true;
+                SignUpFragment.disableCloseBtn = true;
+                signInDialog.dismiss();
+                setSignUpFragment = false;
+                startActivity(registerIntent);
+            }
+        });
+        ////// sign dialog
+
+
+
+        ////// coupon dialog
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            couponRedemptionLayout.setVisibility(View.GONE);
+        } else {
+            couponRedemptionLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void showDialogRecyclerView() {
+        if (couponsRecyclerView.getVisibility() == View.GONE) {
+            couponsRecyclerView.setVisibility(View.VISIBLE);
+            selectedCoupon.setVisibility(View.GONE);
+        } else {
+            couponsRecyclerView.setVisibility(View.GONE);
+            selectedCoupon.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setRating(int starPosition) {
+        for (int x = 0; x < rateNowLayout.getChildCount(); x++) {
+            ImageView starBtn = (ImageView) rateNowLayout.getChildAt(x);
+            starBtn.setColorFilter(Color.parseColor("#C4C4C4"), PorterDuff.Mode.SRC_IN);
+            if (x <= starPosition) {
+                starBtn.setColorFilter(Color.parseColor("#FFEB3B"), PorterDuff.Mode.SRC_IN);
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.search_and_cart_icon, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        } else if (id == R.id.main_search_icon) {
+            return true;
+        } else if (id == R.id.main_cart_icon) {
+            if (currentUser == null) {
+                signInDialog.show();
+            } else {
+                Intent CartIntent = new Intent(ProductDetailsActivity.this, MainActivity.class);
+                showCart = true;
+                startActivity(CartIntent);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

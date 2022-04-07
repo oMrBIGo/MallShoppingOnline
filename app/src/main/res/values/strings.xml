@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">MSHOPO</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="register">สมัครสมาชิก</string>
+    <string name="fullName">กรอกชื่อ-นามสกุล</string>
+    <string name="email">กรอกอีเมล</string>
+    <string name="password">กรอกรหัสผ่าน (8 ตัวขึ้นไป)</string>
+    <string name="confirmPassword">กรอกรหัสผ่านอีกครั้ง</string>
+    <string name="agreement">ยอมรับเงื่อนไข</string>
+    <string name="alreadyAccount">หากคุณทะเบียนไว้แล้ว คลิกที่นี่เพื่อเข้าสู่ระบบ</string>
+    <string name="login">เข้าสู่ระบบ</string>
+    <string name="saveEmail">บันทึกอีเมล</string>
+    <string name="notAccount">ถ้าไม่ได้ลงทะเบียน คลิกที่นี่เลือกลงทะเบียน</string>
+    <string name="email_forgot">กรอกอีเมลที่ต้องการ</string>
+    <string name="reset_password">รีเซ็ตรหัสผ่าน</string>
+    <string name="goBack">◃ ◃ ย้อนกลับ</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Nathit Channel</string>
+    <string name="nav_header_subtitle">nathit.panrod1@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="search">search</string>
+    <string name="notification">notification</string>
+    <string name="cart">cart</string>
+    <string name="my_mall">ร้านค้า</string>
+    <string name="my_orders">คำสั่งซื้อ</string>
+    <string name="my_rewards">คูปองส่วนลด</string>
+    <string name="my_cart">รถเข็น</string>
+    <string name="my_wishlist">สิ่งที่อยากได้</string>
+    <string name="my_account">บัญชีผู้ใช้</string>
+    <string name="logout">ออกจากระบบ</string>
+    <string name="deals">โปรโมชั่นประจำวันนี้!</string>
+    <string name="view_all">สินค้าทั้งหมด</string>
+    <string name="iphone_13_pro">IPHONE 13 PRO</string>
+    <string name="monitor">จอภาพขนาด 6.1 นิ้ว</string>
+    <string name="price">เริ่มต้นที่ ฿38,900 บาท</string>
+    <string name="product_title">ชื่อสินค้า</string>
+    <string name="total_rating">คะแนนทั้งหมด</string>
+    <string name="_4_5">4.5</string>
+
+    <string name="address_header">ที่อยู่ของคุณ</string>
+    <string name="city">เมือง*</string>
+    <string name="address_street">ที่อยู่,ถนน*</string>
+    <string name="flat_no">เลขที่แฟลต,ชื่ออาคาร*</string>
+    <string name="pincode">รหัสไปรษณีย์*</string>
+    <string name="address_zone">แขวง,เขต*</string>
+    <string name="landmark">จุดสังเกต(ไม่บังคับ)</string>
+    <string name="address_name">ชื่อ-นามสกุล*</string>
+    <string name="mobile_no">เบอร์โทรศัพท์มือถือ*</string>
+    <string name="alternate_mobile_no">เบอร์โทรศัพท์มือถือสำรอง(ไม่บังคับ)</string>
+    <string name="save_btn">บันทึกที่อยู่ของคุณ</string>
+    <string name="deals_of_the_day">ดีลเด็ดประจำวัน</string>
+
+</resources>

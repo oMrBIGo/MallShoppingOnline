@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/teal_200</item>
+        <item name="colorPrimaryDark">@color/teal_200</item>
+        <item name="colorAccent">@color/teal_200</item>
+        <item name="colorControlNormal">#ffffff</item>
+
+    </style>
+
+    <style name="BlueProgressbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/teal_200</item>
+        <item name="colorPrimaryDark">@color/teal_200</item>
+        <item name="colorAccent">@color/teal_200</item>
+    </style>
+
+    <style name="Theme.MallShoppingOnline.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MallShoppingOnline.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+
+    <style name="NavigationDrawerStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/prolight</item>
+    </style>
+
+    <!-- ToolBar -->
+    <style name="ToolBarStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:fontFamily">@font/proregular</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="actionOverflowButtonStyle">@color/purple_200</item>
+        <item name="tint">@color/white</item>
+        <item name="drawerArrowStyle">@color/purple_200</item>
+    </style>
+
+    <style name="customfontstyle" parent="@android:style/TextAppearance.Small">
+        <item name="android:fontFamily">@font/proregular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

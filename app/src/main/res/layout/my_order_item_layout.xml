@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:background="@color/white"
+    android:elevation="2dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proregular"
+                android:text="@string/iphone_13_pro"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/order_indicator"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    app:tint="@color/green"
+                    android:src="@drawable/default_dot"/>
+
+                <TextView
+                    android:id="@+id/order_delivered_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/proregular"
+                    android:text="จัดส่งสินค้าแล้วเมื่อวันที่ 15 มีนาคม 2565"
+                    android:textSize="13sp"
+                    android:textColor="@color/black"/>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_your_rating"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="2dp"
+                android:fontFamily="@font/proregular"
+                android:paddingTop="20dp"
+                android:text="ให้คะแนน"
+                android:gravity="bottom"
+                android:textColor="#434343"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/product_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/smartphone1" />
+
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="15dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="3dp">
+
+        <LinearLayout
+            android:id="@+id/rate_now_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/star1"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_star"
+                app:tint="#C4C4C4" />
+
+            <ImageView
+                android:id="@+id/star2"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_star"
+                app:tint="#C4C4C4" />
+
+            <ImageView
+                android:id="@+id/star3"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_star"
+                app:tint="#C4C4C4" />
+
+            <ImageView
+                android:id="@+id/star4"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_star"
+                app:tint="#C4C4C4" />
+
+            <ImageView
+                android:id="@+id/star5"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_star"
+                app:tint="#C4C4C4" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

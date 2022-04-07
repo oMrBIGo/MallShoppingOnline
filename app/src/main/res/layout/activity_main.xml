@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity"
+    tools:openDrawer="start">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.MallShoppingOnline.PopupOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/purple_200">
+
+                <ImageView
+                    android:id="@+id/actionbar_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/logo_header_white" />
+
+                <TextView
+                    android:id="@+id/tv_cart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_cart"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="#ffffff"
+                    android:fontFamily="@font/proregular"
+                    android:gravity="center"
+                    android:text="รถเข็นของฉัน"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:visibility="gone" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/main_framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:theme="@style/NavigationDrawerStyle"
+        app:headerLayout="@layout/nav_header_main"
+        app:itemIconTint="#838383"
+        app:itemTextColor="#838383"
+        app:menu="@menu/activity_main_drawer"
+        app:subheaderColor="@color/purple_200" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/slider_background"
+    android:elevation="4dp"
+    android:orientation="vertical"
+
+    android:paddingStart="16dp"
+
+    android:paddingBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/proregular"
+            android:text="ที่อยู่ของฉัน"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/view_all_address_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/proregular"
+            android:text="ดูทั้งหมด"
+            android:stateListAnimator="@null"
+            android:textColor="@color/purple_200"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/address_fullname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/proregular"
+        android:text="ชื่อ-นามสกุล: "
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/proregular"
+        android:layout_marginTop="4dp"
+        android:text="ที่อยู่: "
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/address_pincode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/proregular"
+        android:layout_marginTop="4dp"
+        android:text="หมายเลขไปรษณีย์: "
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+</LinearLayout>

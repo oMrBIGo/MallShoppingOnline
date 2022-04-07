@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/RecyclerBackground"
+    tools:context=".MyAddressActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MallShoppingOnline.PopupOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_200"
+            app:theme="@style/ToolBarStyle">
+
+            <TextView
+                android:id="@+id/tv_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableEnd="@drawable/ic_location"
+                android:drawablePadding="8dp"
+                android:drawableTint="#ffffff"
+                android:fontFamily="@font/proregular"
+                android:gravity="center"
+                android:text="ที่อยู่"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:visibility="visible" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/add_new_address_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_add_location"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/purple_200"
+            android:fontFamily="@font/proregular"
+            android:padding="16dp"
+            android:text="เพิ่มที่อยู่ใหม่"
+            android:textColor="@color/purple_200"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/address_saved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/proregular"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:text="2 ที่อยู่ที่บันทึกไว้"
+        android:textColor="@color/purple_200"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_new_address_btn" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/addresses_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/RecyclerBackground"
+        app:layout_constraintBottom_toTopOf="@+id/deliver_here_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/address_saved" />
+
+    <Button
+        android:id="@+id/deliver_here_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        android:elevation="6dp"
+        android:fontFamily="@font/proregular"
+        android:stateListAnimator="@null"
+        android:text="เลือกที่อยู่จัดส่ง"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

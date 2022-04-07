@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/slider_background"
+    android:backgroundTint="@color/white"
+    android:elevation="6dp"
+    android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/proregular"
+                    android:text="คูปองส่วนลดของคุณ"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/toggle_recyclerview"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/vertical_dots" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/coupon_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:elevation="4dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/RecyclerBackground"
+                tools:visibility="gone" />
+
+
+            <LinearLayout
+                android:id="@+id/selected_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="6dp"
+                android:orientation="horizontal"
+                android:background="@drawable/reward_grdient_background">
+
+                <include layout="@layout/rewards_item_layout"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ราคาเดิม"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/proregular"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/original_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ราคา 42,900 บาท"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/proregular"
+                        android:textStyle="bold"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ราคาหลังแลกคูปอง"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/proregular"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/discounted_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ราคา 32,900 บาท"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/proregular"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/proregular"
+                android:layout_marginBottom="8dp"
+                android:text="*อย่าลืมใช้คูปองในรถเข็นของคุณ"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+
+</RelativeLayout>

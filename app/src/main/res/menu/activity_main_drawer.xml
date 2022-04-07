@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_mall"
+            android:icon="@drawable/ic_mall"
+            android:title="@string/my_mall" />
+        <item
+            android:id="@+id/nav_my_orders"
+            android:icon="@drawable/ic_my_order"
+            android:title="@string/my_orders" />
+        <item
+            android:id="@+id/nav_my_rewards"
+            android:icon="@drawable/ic_rewards"
+            android:title="@string/my_rewards" />
+        <item
+            android:id="@+id/nav_my_cart"
+            android:icon="@drawable/ic_cart"
+            android:title="@string/my_cart" />
+        <item
+            android:id="@+id/nav_my_wishlist"
+            android:icon="@drawable/ic_wishlist"
+            android:title="@string/my_wishlist" />
+        <item
+            android:id="@+id/nav_my_account"
+            android:icon="@drawable/ic_account"
+            android:title="@string/my_account" />
+    </group>
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/logout" />
+</menu>

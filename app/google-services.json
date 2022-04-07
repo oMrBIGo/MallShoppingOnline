@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "36207998771",
+    "project_id": "mshopo-9595a",
+    "storage_bucket": "mshopo-9595a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36207998771:android:b21cf3571d8a7caf6d7046",
+        "android_client_info": {
+          "package_name": "com.nathit.mallshoppingonline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "36207998771-bb7ndk0oo8m45rvj0kdt0vet0p90vo8j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nathit.mallshoppingonline",
+            "certificate_hash": "9af2fb7e0ecab43cd52d1a624f4891824b253989"
+          }
+        },
+        {
+          "client_id": "36207998771-g37lkkpl6q90c8n0hf2shhavqb70cd6f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_0k9n41_g3O42U8kYGZNnsTuh8ca0RP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "36207998771-g37lkkpl6q90c8n0hf2shhavqb70cd6f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

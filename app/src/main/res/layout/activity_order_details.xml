@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OrderDetailsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MallShoppingOnline.PopupOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_200"
+            app:theme="@style/ToolBarStyle">
+
+            <TextView
+                android:id="@+id/tv_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableEnd="@drawable/ic_my_order"
+                android:drawablePadding="8dp"
+                android:drawableTint="#ffffff"
+                android:fontFamily="@font/proregular"
+                android:gravity="center"
+                android:text="รายละเอียดการสั่งซื้อ"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:visibility="visible" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/RecyclerBackground"
+            android:orientation="vertical">
+
+            <include layout="@layout/order_details_layout" />
+
+            <include layout="@layout/shipping_details_layout" />
+
+            <include layout="@layout/cart_total_amount_layout" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>
