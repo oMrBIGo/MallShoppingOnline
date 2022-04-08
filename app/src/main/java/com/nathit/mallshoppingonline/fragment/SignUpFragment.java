@@ -181,13 +181,27 @@ public class SignUpFragment extends Fragment {
                             Map<Object, String> userData = new HashMap<>();
                             userData.put("fullname", fullName.getText().toString());
 
-                            firebaseFirestore.collection("USERS")
-                                    .add(userData)
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            firebaseFirestore.collection("USERS").document(firebaseAuth.getUid())
+                                    .set(userData)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                                        public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                mainIntent();
+                                                Map<Object, Long> listSize = new HashMap<>();
+                                                listSize.put("fullname", (long) 0);
+                                                firebaseFirestore.collection("USERS").document(firebaseAuth.getUid()).collection("USER_DATA").document("MY_WISHLIST")
+                                                        .set(listSize).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            mainIntent();
+                                                        } else {
+                                                            Toast.makeText(getActivity(), "ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่ภายหลัง!", Toast.LENGTH_SHORT).show();
+                                                            progressBar.setVisibility(View.GONE);
+                                                        }
+                                                    }
+                                                });
+
                                                 Toast.makeText(getActivity(), "สมัครสมาชิกเรียบร้อยแล้ว", Toast.LENGTH_SHORT).show();
                                                 progressBar.setVisibility(View.GONE);
                                             } else {
@@ -209,7 +223,7 @@ public class SignUpFragment extends Fragment {
                                 email.setError("ผู้ใช้ได้ลงทะเบียนกับอีเมลนี้แล้ว กรุณาลงทะเบียนด้วยอีเมลอื่น");
                                 email.requestFocus();
                             } catch (Exception e) {
-                                Log.e(TAG, "onComplete: "+ e.getMessage());
+                                Log.e(TAG, "onComplete: " + e.getMessage());
                                 Toast.makeText(getActivity(), "ไม่สามารถสมัครสมาชิกได้ กรุณาลองใหม่ภายหลัง!", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                             }
@@ -229,8 +243,8 @@ public class SignUpFragment extends Fragment {
 
     private void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_from_left,R.anim.slideout_from_right);
-        fragmentTransaction.replace(parentFrameLayout.getId(),fragment);
+        fragmentTransaction.setCustomAnimations(R.anim.slide_from_left, R.anim.slideout_from_right);
+        fragmentTransaction.replace(parentFrameLayout.getId(), fragment);
         fragmentTransaction.commit();
     }
 
