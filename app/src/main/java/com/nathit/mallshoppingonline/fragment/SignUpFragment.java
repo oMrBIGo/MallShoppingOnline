@@ -178,17 +178,16 @@ public class SignUpFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            Map<Object, String> userData = new HashMap<>();
+                            Map<String,Object> userData = new HashMap<>();
                             userData.put("fullname", fullName.getText().toString());
-
                             firebaseFirestore.collection("USERS").document(firebaseAuth.getUid())
                                     .set(userData)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Map<Object, Long> listSize = new HashMap<>();
-                                                listSize.put("fullname", (long) 0);
+                                                Map<String,Object> listSize = new HashMap<>();
+                                                listSize.put("list_size", (long) 0);
                                                 firebaseFirestore.collection("USERS").document(firebaseAuth.getUid()).collection("USER_DATA").document("MY_WISHLIST")
                                                         .set(listSize).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override

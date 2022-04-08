@@ -39,13 +39,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.nathit.mallshoppingonline.adapter.MyRewardsAdapter;
 import com.nathit.mallshoppingonline.adapter.ProductDetailsAdapter;
 import com.nathit.mallshoppingonline.adapter.ProductImagesAdapter;
+import com.nathit.mallshoppingonline.db.DBQueries;
 import com.nathit.mallshoppingonline.fragment.SignInFragment;
 import com.nathit.mallshoppingonline.fragment.SignUpFragment;
 import com.nathit.mallshoppingonline.model.ProductSpecificationModel;
 import com.nathit.mallshoppingonline.model.RewardModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
@@ -91,7 +94,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private FloatingActionButton addToWishlistBtn;
 
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseUser currentUser;
 
     //////// couponDialog
     public static TextView couponTitle;
@@ -102,6 +104,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
     //////// couponDialog
 
     private Dialog signInDialog;
+    private Dialog loadingDialog;
+    private FirebaseUser currentUser;
+    private String productID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,11 +143,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
         addToCartBtn = findViewById(R.id.add_to_cart_btn);
         couponRedemptionLayout = findViewById(R.id.coupon_redemption_layout);
 
+        /////// loading dialog
+        loadingDialog = new Dialog(ProductDetailsActivity.this);
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loadingDialog.show();
+        /////// loading dialog
+
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        List<String> productImages = new ArrayList<>();
-
-        firebaseFirestore.collection("PRODUCTS").document("GSZxbgQsS71SXY3jrvGr")
+        final List<String> productImages = new ArrayList<>();
+        productID = getIntent().getStringExtra("PRODUCT_ID");
+        firebaseFirestore.collection("PRODUCTS").document("GSZxbgQsS71SXY3jrvGr") //error PRODUCT_ID firebase
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -208,7 +222,20 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     averageRatings.setText(documentSnapshot.get("average_rating").toString());
                     productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(), productDetailsTabLayout.getTabCount(), productDescription, productOtherDetails, productSpecificationModelList));
 
+                    if (DBQueries.wishList.size() == 0) {
+                        DBQueries.loadWishList(ProductDetailsActivity.this,loadingDialog);
+                    } else {
+                        loadingDialog.dismiss();
+                    }
+
+                    if (DBQueries.wishList.contains(productID)) {
+                        ALREADY_ADDED_TO_WISHLIST = true;
+                        addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
+                    } else {
+                        ALREADY_ADDED_TO_WISHLIST = false;
+                    }
                 } else {
+                    loadingDialog.dismiss();
                     Toast.makeText(ProductDetailsActivity.this, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -227,6 +254,38 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         ALREADY_ADDED_TO_WISHLIST = false;
                         addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
                     } else {
+
+                        Map<String,Object> addProduct = new HashMap<>();
+                        addProduct.put("product_ID_"+String.valueOf(DBQueries.wishList.size()),productID);
+
+                        firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
+                                .set(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Map<String,Object> updateListSize = new HashMap<>();
+                                    updateListSize.put("list_size",(long)(DBQueries.wishList.size()+1));
+                                    firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
+                                            .update(updateListSize).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                ALREADY_ADDED_TO_WISHLIST = true;
+                                                addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
+                                                DBQueries.wishList.add(productID);
+                                                Toast.makeText(ProductDetailsActivity.this, "เพิ่มสินค้าที่อยากได้เรียบร้อยแล้ว!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(ProductDetailsActivity.this, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
+                                } else {
+                                    Toast.makeText(ProductDetailsActivity.this, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
                         ALREADY_ADDED_TO_WISHLIST = true;
                         addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
                     }
