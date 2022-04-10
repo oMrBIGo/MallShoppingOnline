@@ -75,7 +75,8 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailsActivity.class).putExtra("PRODUCT_ID",productId);
+                        Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
+                        productDetailsIntent.putExtra("PRODUCT_ID",productId);
                         itemView.getContext().startActivity(productDetailsIntent);
                     }
                 });

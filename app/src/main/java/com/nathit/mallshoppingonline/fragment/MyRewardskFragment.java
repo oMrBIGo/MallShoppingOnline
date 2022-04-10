@@ -50,7 +50,6 @@ public class MyRewardskFragment extends Fragment {
         MyRewardsAdapter myRewardsAdapter = new MyRewardsAdapter(rewardModelList,false);
         rewardsRecyclerView.setAdapter(myRewardsAdapter);
         myRewardsAdapter.notifyDataSetChanged();
-
         return view;
     }
 }

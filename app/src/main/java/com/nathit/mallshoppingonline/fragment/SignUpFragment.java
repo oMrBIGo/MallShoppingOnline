@@ -180,6 +180,7 @@ public class SignUpFragment extends Fragment {
 
                             Map<String,Object> userData = new HashMap<>();
                             userData.put("fullname", fullName.getText().toString());
+
                             firebaseFirestore.collection("USERS").document(firebaseAuth.getUid())
                                     .set(userData)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
