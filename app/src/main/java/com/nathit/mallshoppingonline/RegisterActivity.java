@@ -23,8 +23,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        init_screen();
-
         frameLayout = findViewById(R.id.FrameLayout);
 
         if (setSignUpFragment) {
@@ -61,20 +59,6 @@ public class RegisterActivity extends AppCompatActivity {
         fragmentTransaction.setCustomAnimations(R.anim.slide_from_left,R.anim.slideout_from_right);
         fragmentTransaction.replace(frameLayout.getId(),fragment);
         fragmentTransaction.commit();
-    }
-
-    private void init_screen() {
-        final int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        getWindow().getDecorView().setSystemUiVisibility(flags);
-        final View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(flags);
-                }
-            }
-        });
     }
 
 }

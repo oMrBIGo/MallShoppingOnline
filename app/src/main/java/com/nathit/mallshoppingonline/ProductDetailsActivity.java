@@ -44,6 +44,7 @@ import com.nathit.mallshoppingonline.fragment.SignInFragment;
 import com.nathit.mallshoppingonline.fragment.SignUpFragment;
 import com.nathit.mallshoppingonline.model.ProductSpecificationModel;
 import com.nathit.mallshoppingonline.model.RewardModel;
+import com.nathit.mallshoppingonline.model.WishlistModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +53,11 @@ import java.util.Map;
 
 public class ProductDetailsActivity extends AppCompatActivity {
 
-    private ViewPager productImageViewPager;
+    public static boolean running_wishlist_query = false;
+    public static boolean running_rating_query = false;
+
+    private ViewPager productImagesViewPager;
+    private TabLayout viewpagerIndicator;
     private TextView productTitle;
     private TextView averageRatingMiniView;
     private TextView totalRatingMiniView;
@@ -60,29 +65,30 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private TextView cuttedPrice;
     private Button codIndicator;
     private TextView tvCodIndicator;
-    private TabLayout viewpagerIndicator;
+    private TextView rewardTitle;
+    private TextView rewardBody;
 
     private LinearLayout couponRedemptionLayout;
     private Button couponRedeemBtn;
-    private TextView rewardTitle;
-    private TextView rewardBody;
 
     //////// Product description
     private LinearLayout productDetailsOnlyContainer;
     private LinearLayout productDetailsTabsContainer;
     private ViewPager productDetailsViewpager;
     private TabLayout productDetailsTabLayout;
-    private TextView productOnlyDescriptionBody;
-
     private List<ProductSpecificationModel> productSpecificationModelList = new ArrayList<>();
+
+    private TextView productOnlyDescriptionBody;
     private String productDescription;
     private String productOtherDetails;
     //////// Product description
 
     //////// rating layout
-    private LinearLayout rateNowLayout;
+    public static int initialRating;
     private TextView totalRatings;
+    public static LinearLayout rateNowLayout;
     private LinearLayout ratingsNoContainer;
+    private TextView totalRatingsFigure;
     private LinearLayout ratingsProgressBarContainer;
     private TextView averageRatings;
     //////// rating layout
@@ -90,8 +96,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private Button buyNowBtn;
     private LinearLayout addToCartBtn;
 
-    private static boolean ALREADY_ADDED_TO_WISHLIST = false;
-    private FloatingActionButton addToWishlistBtn;
+    public static boolean ALREADY_ADDED_TO_WISHLIST = false;
+    public static FloatingActionButton addToWishListBtn;
 
     private FirebaseFirestore firebaseFirestore;
 
@@ -106,7 +112,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private Dialog signInDialog;
     private Dialog loadingDialog;
     private FirebaseUser currentUser;
-    private String productID;
+    public static String productID;
+
+    private DocumentSnapshot documentSnapshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,9 +125,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        productImageViewPager = findViewById(R.id.product_images_viewpager);
+        productImagesViewPager = findViewById(R.id.product_images_viewpager);
         viewpagerIndicator = findViewById(R.id.viewpager_indicator);
-        addToWishlistBtn = findViewById(R.id.add_to_wishlist_btn);
+        addToWishListBtn = findViewById(R.id.add_to_wishlist_btn);
         productDetailsViewpager = findViewById(R.id.product_details_viewpager);
         productDetailsTabLayout = findViewById(R.id.product_details_tabLayout);
         buyNowBtn = findViewById(R.id.buy_now_btn);
@@ -143,6 +151,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         addToCartBtn = findViewById(R.id.add_to_cart_btn);
         couponRedemptionLayout = findViewById(R.id.coupon_redemption_layout);
 
+        initialRating = -1;
+
         /////// loading dialog
         loadingDialog = new Dialog(ProductDetailsActivity.this);
         loadingDialog.setContentView(R.layout.loading_progress_dialog);
@@ -156,22 +166,26 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         final List<String> productImages = new ArrayList<>();
         productID = getIntent().getStringExtra("PRODUCT_ID");
-        firebaseFirestore.collection("PRODUCTS").document("GSZxbgQsS71SXY3jrvGr") //error PRODUCT_ID firebase
+        firebaseFirestore.collection("PRODUCTS").document(productID)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
                 if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
+                    documentSnapshot = task.getResult();
+
                     for (long x = 1; x < (long) documentSnapshot.get("no_of_product_images") + 1; x++) {
                         productImages.add(documentSnapshot.get("product_image_" + x).toString());
                     }
                     ProductImagesAdapter productImagesAdapter = new ProductImagesAdapter(productImages);
-                    productImageViewPager.setAdapter(productImagesAdapter);
+                    productImagesViewPager.setAdapter(productImagesAdapter);
 
                     productTitle.setText(documentSnapshot.get("product_title").toString());
+
                     averageRatingMiniView.setText(documentSnapshot.get("average_rating").toString());
                     totalRatingMiniView.setText("(" + (long) documentSnapshot.get("total_ratings") + ") คะแนน");
                     productPrice.setText(documentSnapshot.get("product_price").toString() + " บาท");
+
                     cuttedPrice.setText(documentSnapshot.get("cutted_price").toString() + " บาท");
                     if ((boolean) documentSnapshot.get("COD")) {
                         codIndicator.setVisibility(View.VISIBLE);
@@ -201,14 +215,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
                         }
                     } else {
+
                         productDetailsTabsContainer.setVisibility(View.GONE);
                         productDetailsOnlyContainer.setVisibility(View.VISIBLE);
                         productOnlyDescriptionBody.setText(documentSnapshot.get("product_description").toString());
                     }
 
                     totalRatings.setText((long) documentSnapshot.get("total_ratings") + " คะแนน");
-
-
                     for (int x = 0; x < 5; x++) {
                         TextView rating = (TextView) ratingsNoContainer.getChildAt(x);
                         rating.setText(String.valueOf((long) documentSnapshot.get((5 - x) + "_star")));
@@ -222,18 +235,24 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     averageRatings.setText(documentSnapshot.get("average_rating").toString());
                     productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(), productDetailsTabLayout.getTabCount(), productDescription, productOtherDetails, productSpecificationModelList));
 
-                    if (DBQueries.wishList.size() == 0) {
-                        DBQueries.loadWishList(ProductDetailsActivity.this,loadingDialog);
+                    if (currentUser != null) {
+                        if (DBQueries.wishList.size() == 0) {
+                            DBQueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
+                        } else {
+                            loadingDialog.dismiss();
+                        }
                     } else {
                         loadingDialog.dismiss();
                     }
 
                     if (DBQueries.wishList.contains(productID)) {
                         ALREADY_ADDED_TO_WISHLIST = true;
-                        addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
+                        addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
                     } else {
+                        addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
                         ALREADY_ADDED_TO_WISHLIST = false;
                     }
+
                 } else {
                     loadingDialog.dismiss();
                     Toast.makeText(ProductDetailsActivity.this, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน",
@@ -242,52 +261,72 @@ public class ProductDetailsActivity extends AppCompatActivity {
             }
         });
 
-        viewpagerIndicator.setupWithViewPager(productImageViewPager, true);
+        viewpagerIndicator.setupWithViewPager(productImagesViewPager, true);
 
-        addToWishlistBtn.setOnClickListener(new View.OnClickListener() {
+        addToWishListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentUser == null) {
                     signInDialog.show();
                 } else {
-                    if (ALREADY_ADDED_TO_WISHLIST) {
-                        ALREADY_ADDED_TO_WISHLIST = false;
-                        addToWishlistBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
-                    } else {
+                    addToWishListBtn.setEnabled(false);
 
-                        Map<String,Object> addProduct = new HashMap<>();
-                        addProduct.put("product_ID_"+String.valueOf(DBQueries.wishList.size()),productID);
+                    if (ALREADY_ADDED_TO_WISHLIST) {
+                        int index = DBQueries.wishList.indexOf(productID);
+                        DBQueries.removeFromWishlist(index, ProductDetailsActivity.this);
+                        ALREADY_ADDED_TO_WISHLIST = false;
+                        addToWishListBtn.setSupportImageTintList(ColorStateList.valueOf(Color.parseColor("#9e9e9e")));
+                    } else {
+                        addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.purple_200));
+                        Map<String, Object> addProduct = new HashMap<>();
+                        addProduct.put("product_ID_" + String.valueOf(DBQueries.wishList.size()), productID);
 
                         firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
                                 .set(addProduct).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Map<String,Object> updateListSize = new HashMap<>();
-                                    updateListSize.put("list_size",(long)(DBQueries.wishList.size()+1));
+
+                                    Map<String, Object> updateListSize = new HashMap<>();
+                                    updateListSize.put("list_size", (long) (DBQueries.wishList.size() + 1));
+
                                     firebaseFirestore.collection("USERS").document(currentUser.getUid()).collection("USER_DATA").document("MY_WISHLIST")
                                             .update(updateListSize).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+
+                                                if (DBQueries.wishlistModelList.size() != 0) {
+                                                    DBQueries.wishlistModelList.add(new WishlistModel(documentSnapshot.get("product_image_1").toString()
+                                                            , documentSnapshot.get("product_full_title").toString()
+                                                            , (long) documentSnapshot.get("free_coupons")
+                                                            , documentSnapshot.get("average_rating").toString()
+                                                            , (long) documentSnapshot.get("total_ratings")
+                                                            , documentSnapshot.get("product_price").toString()
+                                                            , documentSnapshot.get("cutted_price").toString()
+                                                            , (boolean) documentSnapshot.get("COD")));
+                                                }
+
                                                 ALREADY_ADDED_TO_WISHLIST = true;
-                                                addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
+                                                addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
                                                 DBQueries.wishList.add(productID);
                                                 Toast.makeText(ProductDetailsActivity.this, "เพิ่มสินค้าที่อยากได้เรียบร้อยแล้ว!", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 Toast.makeText(ProductDetailsActivity.this, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน", Toast.LENGTH_SHORT).show();
                                             }
+                                            addToWishListBtn.setEnabled(true);
                                         }
                                     });
 
                                 } else {
+                                    addToWishListBtn.setEnabled(true);
                                     Toast.makeText(ProductDetailsActivity.this, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
 
                         ALREADY_ADDED_TO_WISHLIST = true;
-                        addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
+                        addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
                     }
                 }
             }
@@ -313,6 +352,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         //////// rating layout
         rateNowLayout = findViewById(R.id.rate_now_linear);
+
         for (int x = 0; x < rateNowLayout.getChildCount(); x++) {
             final int startPosition = x;
             rateNowLayout.getChildAt(x).setOnClickListener(new View.OnClickListener() {
@@ -362,9 +402,11 @@ public class ProductDetailsActivity extends AppCompatActivity {
         ImageView toggleRecyclerView = checkCouponPriceDialog.findViewById(R.id.toggle_recyclerview);
         couponsRecyclerView = checkCouponPriceDialog.findViewById(R.id.coupon_recyclerView);
         selectedCoupon = checkCouponPriceDialog.findViewById(R.id.selected_coupon);
+
         couponTitle = checkCouponPriceDialog.findViewById(R.id.coupen_title);
         couponExpiryDate = checkCouponPriceDialog.findViewById(R.id.coupen_validity);
         couponBody = checkCouponPriceDialog.findViewById(R.id.coupen_body);
+
         TextView originalPrice = checkCouponPriceDialog.findViewById(R.id.original_price);
         TextView discountedPrice = checkCouponPriceDialog.findViewById(R.id.discounted_price);
 
@@ -411,6 +453,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         Button dialogSignInBtn = signInDialog.findViewById(R.id.sign_in_btn);
         Button dialogSignUpBtn = signInDialog.findViewById(R.id.sign_up_btn);
+
         Intent registerIntent = new Intent(ProductDetailsActivity.this, RegisterActivity.class);
 
         dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
@@ -435,7 +478,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         ////// sign dialog
 
 
-
         ////// coupon dialog
     }
 
@@ -447,6 +489,23 @@ public class ProductDetailsActivity extends AppCompatActivity {
             couponRedemptionLayout.setVisibility(View.GONE);
         } else {
             couponRedemptionLayout.setVisibility(View.VISIBLE);
+        }
+
+        if (currentUser != null) {
+            if (DBQueries.wishList.size() == 0) {
+                DBQueries.loadWishList(ProductDetailsActivity.this, loadingDialog, false);
+            } else {
+                loadingDialog.dismiss();
+            }
+        } else {
+            loadingDialog.dismiss();
+        }
+
+        if (DBQueries.wishList.contains(productID)) {
+            ALREADY_ADDED_TO_WISHLIST = true;
+            addToWishListBtn.setSupportImageTintList(getResources().getColorStateList(R.color.red));
+        } else {
+            ALREADY_ADDED_TO_WISHLIST = false;
         }
     }
 

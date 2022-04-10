@@ -31,7 +31,6 @@ public class ViewAllActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
-
         TextView tv_cart = findViewById(R.id.tv_cart);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -49,7 +48,6 @@ public class ViewAllActivity extends AppCompatActivity {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(linearLayoutManager);
-
 
             WishlistAdapter adapter = new WishlistAdapter(wishlistModelList, false);
             recyclerView.setAdapter(adapter);
