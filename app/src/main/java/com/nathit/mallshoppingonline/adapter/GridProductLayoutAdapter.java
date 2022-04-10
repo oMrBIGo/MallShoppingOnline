@@ -78,13 +78,11 @@ public class GridProductLayoutAdapter extends RecyclerView.Adapter<GridProductLa
             productDescription.setText(description);
             productTitle.setText(title);
 
-            if (!title.equals("")) {
+            if(!title.equals("")){
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
-                        productDetailsIntent.putExtra("PRODUCT_ID",productId);
-                        itemView.getContext().startActivity(productDetailsIntent);
+                    public void onClick(View view) {
+                        itemView.getContext().startActivity(new Intent(itemView.getContext(),ProductDetailsActivity.class).putExtra("PRODUCT_ID",productId));
                     }
                 });
             }

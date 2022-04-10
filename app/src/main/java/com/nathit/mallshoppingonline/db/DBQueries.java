@@ -142,7 +142,8 @@ public class DBQueries {
 
     public static void loadWishList(Context context, Dialog dialog, final boolean loadProductData) {
         wishList.clear();
-        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_WISHLIST")
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid())
+                .collection("USER_DATA").document("MY_WISHLIST")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -170,6 +171,7 @@ public class DBQueries {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()) {
+                                        final DocumentSnapshot documentSnapshot=task.getResult();
                                         wishlistModelList.add(new WishlistModel(task.getResult().get("product_image_1").toString()
                                                 , task.getResult().get("product_title").toString()
                                                 , (long) task.getResult().get("free_coupons")
@@ -197,18 +199,18 @@ public class DBQueries {
     }
 
     public static void removeFromWishlist(int index,Context context) {
-
+        final String removedProductId = wishList.get(index);
         wishList.remove(index);
         Map<String,Object> updateWishlist = new HashMap<>();
 
         for (int x = 0;x < wishList.size();x++) {
 
-            updateWishlist.put("product_ID"+x,wishList.get(x));
+            updateWishlist.put("product_ID_"+x,wishList.get(x));
         }
         updateWishlist.put("list_size",(long)wishList.size());
 
-        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_WISHLIST")
-                .set(updateWishlist).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid())
+                .collection("USER_DATA").document("MY_WISHLIST").set(updateWishlist).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -223,6 +225,7 @@ public class DBQueries {
                     if(ProductDetailsActivity.addToWishListBtn != null) {
                         ProductDetailsActivity.addToWishListBtn.setSupportImageTintList(context.getResources().getColorStateList(R.color.purple_200));
                     }
+                    wishList.add(index,removedProductId);
                     Toast.makeText(context, "อินเตอร์เน็ตมีปัญหา ไม่สามารถแสดงข้อมูลได้ กรุณาเช็คอินเตอร์เน็ตของท่าน", Toast.LENGTH_SHORT).show();
                 }
                 ProductDetailsActivity.running_wishlist_query = false;

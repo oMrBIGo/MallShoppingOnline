@@ -20,27 +20,32 @@ import java.util.List;
 
 public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<HorizontalProductScrollAdapter.ViewHolder> {
 
-    private List<HorizontalProductScrollModel> horizontalProductScrollModelList;
-
     public HorizontalProductScrollAdapter(List<HorizontalProductScrollModel> horizontalProductScrollModelList) {
         this.horizontalProductScrollModelList = horizontalProductScrollModelList;
     }
 
+    private List<HorizontalProductScrollModel> horizontalProductScrollModelList;
+
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_scroll_item_layout, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         String resource = horizontalProductScrollModelList.get(position).getProduceImage();
         String title = horizontalProductScrollModelList.get(position).getProductTitle();
         String description = horizontalProductScrollModelList.get(position).getProductDescription();
         String price = horizontalProductScrollModelList.get(position).getProductPrice();
         String productId = horizontalProductScrollModelList.get(position).getProductID();
         holder.setData(productId,resource,title,description,price);
+
     }
 
     @Override
@@ -53,10 +58,12 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         private ImageView productImage;
         private TextView productTitle;
         private TextView productDescription;
         private TextView productPrice;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.h_s_product_image);
@@ -71,13 +78,11 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
             productDescription.setText(description);
             productTitle.setText(title);
 
-            if (!title.equals("")) {
+            if(!title.equals("")){
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailsActivity.class);
-                        productDetailsIntent.putExtra("PRODUCT_ID",productId);
-                        itemView.getContext().startActivity(productDetailsIntent);
+                    public void onClick(View view) {
+                        itemView.getContext().startActivity(new Intent(itemView.getContext(),ProductDetailsActivity.class).putExtra("PRODUCT_ID",productId));
                     }
                 });
             }

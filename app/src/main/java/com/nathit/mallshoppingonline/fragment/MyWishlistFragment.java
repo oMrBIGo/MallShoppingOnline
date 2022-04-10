@@ -34,6 +34,7 @@ public class MyWishlistFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_wishlist, container, false);
+        wishlistRecyclerView = view.findViewById(R.id.my_wishlist_recyclerview);
 
         ///////loading dialog
         loadingDialog = new Dialog(getContext());
@@ -43,8 +44,6 @@ public class MyWishlistFragment extends Fragment {
         loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         loadingDialog.show();
         ////////loading dialog
-
-        wishlistRecyclerView = view.findViewById(R.id.my_wishlist_recyclerview);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
